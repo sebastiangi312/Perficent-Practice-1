@@ -20,13 +20,14 @@ public class ItemService {
     }
 
     public void updateQuality() {
-        items = (Item[]) itemRepository.findAll().toArray();
+        var itemsList = itemRepository.findAll();
+        var items = itemsList.toArray(new Item[itemsList.size()]);
 
         for (int i = 0; i < items.length; i++) {
-            if (!items[i].name.equals("Aged Brie")
-                    && !items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+            if (!items[i].type.equals(Item.Type.AGED)
+                    && !items[i].type.equals(Item.Type.TICKETS)) {
                 if (items[i].quality > 0) {
-                    if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
+                    if (!items[i].type.equals(Item.Type.LEGENDARY)) {
                         items[i].quality = items[i].quality - 1;
                     }
                 }
@@ -34,7 +35,7 @@ public class ItemService {
                 if (items[i].quality < 50) {
                     items[i].quality = items[i].quality + 1;
 
-                    if (items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+                    if (items[i].type.equals(Item.Type.TICKETS)) {
                         if (items[i].sellIn < 11) {
                             if (items[i].quality < 50) {
                                 items[i].quality = items[i].quality + 1;
@@ -50,15 +51,15 @@ public class ItemService {
                 }
             }
 
-            if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
+            if (!items[i].type.equals(Item.Type.LEGENDARY)) {
                 items[i].sellIn = items[i].sellIn - 1;
             }
 
             if (items[i].sellIn < 0) {
-                if (!items[i].name.equals("Aged Brie")) {
-                    if (!items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+                if (!items[i].type.equals(Item.Type.AGED)) {
+                    if (!items[i].type.equals(Item.Type.TICKETS)) {
                         if (items[i].quality > 0) {
-                            if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
+                            if (!items[i].type.equals(Item.Type.LEGENDARY)) {
                                 items[i].quality = items[i].quality - 1;
                             }
                         }
@@ -71,6 +72,7 @@ public class ItemService {
                     }
                 }
             }
+            itemRepository.save(items[i]);
         }
     }
 
@@ -80,7 +82,7 @@ public class ItemService {
     }
 
     public Item updateItem(int id, Item item) {
-        return itemRepository.save(new Item(id, item.name, item.sellIn, item.quality));
+        return itemRepository.save(new Item(id, item.name, item.sellIn, item.quality, item.type));
     }
 
     public List<Item> listItems(){
