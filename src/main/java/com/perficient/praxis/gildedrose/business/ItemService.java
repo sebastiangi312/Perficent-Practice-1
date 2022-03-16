@@ -5,6 +5,7 @@ import com.perficient.praxis.gildedrose.model.Item;
 import com.perficient.praxis.gildedrose.repository.ItemRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -19,7 +20,7 @@ public class ItemService {
         this.items = items;
     }
 
-    public void updateQuality() {
+    public List<Item> updateQuality() {
         var itemsList = itemRepository.findAll();
         var items = itemsList.toArray(new Item[itemsList.size()]);
 
@@ -74,6 +75,7 @@ public class ItemService {
             }
             itemRepository.save(items[i]);
         }
+        return Arrays.asList(items);
     }
 
 
