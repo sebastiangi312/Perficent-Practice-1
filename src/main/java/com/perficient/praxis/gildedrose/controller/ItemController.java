@@ -50,9 +50,9 @@ public class ItemController {
     }
 
     @PostMapping("/quality")
-    public ResponseEntity<Item> updateItemsQuality(){
-        itemService.updateQuality();
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<List<Item>> updateItemsQuality(){
+        var items = itemService.updateQuality();
+        return new ResponseEntity<>(items, HttpStatus.OK);
     }
 
 }
