@@ -1,4 +1,4 @@
-package com.perficient.praxis.gildedrose;
+package com.perficient.praxis.gildedrose.thisIsJustATest;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
