@@ -15,7 +15,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class ItemServiceTest {
@@ -47,6 +47,12 @@ public class ItemServiceTest {
     }
 
     @Test
+    /**
+     * GIVEN a valid normal type item in the database
+     * WHEN updateQuality method is called
+     * THEN the service should update the quality and sellIn values,
+     * both will be decreased by 1
+     */
     public void testUpdateQualityOfNormalTypeItem(){
 
         var item = new Item(0, "Oreo", 10, 30, Item.Type.NORMAL);
@@ -59,6 +65,7 @@ public class ItemServiceTest {
         assertEquals(9, itemsUpdated.get(0).sellIn);
         assertEquals(29, itemsUpdated.get(0).quality);
         assertEquals(Item.Type.NORMAL, itemsUpdated.get(0).type);
+        verify(itemRepository,times(1)).save(any());
     }
 
 

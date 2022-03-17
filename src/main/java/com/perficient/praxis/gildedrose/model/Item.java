@@ -46,8 +46,7 @@ public class Item {
         AGED,
         NORMAL,
         LEGENDARY,
-        TICKETS,
-        CONJURED
+        TICKETS
     }
 
     @Override
