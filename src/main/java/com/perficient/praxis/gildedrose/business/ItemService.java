@@ -84,7 +84,16 @@ public class ItemService {
     }
 
     public Item updateItem(int id, Item item) {
-        return itemRepository.save(new Item(id, item.name, item.sellIn, item.quality, item.type));
+        try{
+            Item oldItem = findById(id);
+            if(item.name == null)
+                item.name = oldItem.name;
+            if(item.type == null)
+                item.type = oldItem.type;
+            return itemRepository.save(new Item(id, item.name, item.sellIn, item.quality, item.type));
+        }catch (ResourceNotFoundException e){
+            throw e;
+        }
     }
 
     public List<Item> listItems(){

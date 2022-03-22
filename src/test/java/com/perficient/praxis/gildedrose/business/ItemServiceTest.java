@@ -68,12 +68,47 @@ public class ItemServiceTest {
         verify(itemRepository,times(1)).save(any());
     }
 
+    @Test
+    public void testCreateItemSuccess(){
 
+        var item = new Item(12,"Wine",15,20, Item.Type.AGED);
+        itemService.createItem(item);
+        when(itemRepository.findAll()).thenReturn(List.of(item));
 
+        var itemCreated = itemService.listItems();
 
+        assertEquals(12, itemCreated.get(0).getId());
+        assertEquals("Wine", itemCreated.get(0).name);
+        assertEquals(15, itemCreated.get(0).sellIn);
+        assertEquals(20, itemCreated.get(0).quality);
+        assertEquals(Item.Type.AGED, itemCreated.get(0).type);
+        verify(itemRepository,times(1)).save(any());
+    }
 
+    @Test
+    public void testUpdateItemWhenItemWasNotFound(){
 
+        var item = new Item(12,"Wine",15,20, Item.Type.AGED);
+        when(itemRepository.findById(anyInt())).thenReturn(Optional.empty());
 
+        assertThrows(ResourceNotFoundException.class, () ->
+                itemService.updateItem(item.getId(), item));
+    }
 
+    @Test
+    public void testUpdateItemWhenItemWasSentFull(){
 
+        var oldItem = new Item(12, "Oreo", 10, 30, Item.Type.NORMAL);
+        var item = new Item(12,"Wine",15,20, Item.Type.AGED);
+        when(itemRepository.findById(anyInt())).thenReturn(Optional.of(oldItem));
+
+        Item itemUpdated = itemService.updateItem(12,item);
+
+        assertEquals(12, itemUpdated.getId());
+        assertEquals("Wine", itemUpdated.name);
+        assertEquals(15, itemUpdated.sellIn);
+        assertEquals(20, itemUpdated.quality);
+        assertEquals(Item.Type.AGED, itemUpdated.type);
+
+    }
 }
