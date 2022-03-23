@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,6 +110,61 @@ public class ItemServiceTest {
         assertEquals(15, itemUpdated.sellIn);
         assertEquals(20, itemUpdated.quality);
         assertEquals(Item.Type.AGED, itemUpdated.type);
-
     }
+
+    @Test
+    public void testUpdateItemWhenItemWasSentWithoutNameAndType(){
+
+        var oldItem = new Item(12, "Oreo", 10, 30, Item.Type.NORMAL);
+        var item = new Item(12,null,15,20, null);
+        when(itemRepository.findById(anyInt())).thenReturn(Optional.of(oldItem));
+
+        Item itemUpdated = itemService.updateItem(12,item);
+
+        assertEquals(12, itemUpdated.getId());
+        assertEquals("Oreo", itemUpdated.name);
+        assertEquals(15, itemUpdated.sellIn);
+        assertEquals(20, itemUpdated.quality);
+        assertEquals(Item.Type.NORMAL, itemUpdated.type);
+    }
+
+    @Test
+    public void testCreatingItemsWhenIDAreDifferent(){
+        var item = new Item(12,"The Batman",15,20, Item.Type.TICKETS);
+        var item2 = new Item(13,"Chocorramo",20,50, Item.Type.NORMAL);
+
+        List<Item> items = new LinkedList<>();
+        items.add(item);
+        items.add(item2);
+
+        when(itemRepository.saveAll(any())).thenReturn(items);
+        assertEquals(2, items.size());
+        assertEquals(12, item.getId());
+        assertEquals("The Batman", item.name);
+        assertEquals(15, item.sellIn);
+        assertEquals(20, item.quality);
+        assertEquals(Item.Type.TICKETS, item.type);
+
+        assertEquals(13, item2.getId());
+        assertEquals("Chocorramo", item2.name);
+        assertEquals(20, item2.sellIn);
+        assertEquals(50, item2.quality);
+        assertEquals(Item.Type.NORMAL, item2.type);
+    }
+
+    @Test
+    public void testCreatingItemsWhithSameID(){
+        var item = new Item(12,"The Batman",15,20, Item.Type.TICKETS);
+        var item2 = new Item(12,"Chocorramo",20,50, Item.Type.NORMAL);
+
+        List<Item> items = new LinkedList<>();
+        items.add(item);
+        items.add(item2);
+
+        when(itemRepository.saveAll(any())).thenReturn(items);
+
+        assertThrows(ResourceNotFoundException.class, () ->
+                itemService.createItems(items));
+    }
+
 }

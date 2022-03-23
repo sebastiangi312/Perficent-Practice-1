@@ -6,7 +6,9 @@ import com.perficient.praxis.gildedrose.repository.ItemRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemService {
@@ -84,24 +86,34 @@ public class ItemService {
     }
 
     public Item updateItem(int id, Item item) {
-        try{
+        try {
             Item oldItem = findById(id);
-            if(item.name == null)
+            if (item.name == null)
                 item.name = oldItem.name;
-            if(item.type == null)
+            if (item.type == null)
                 item.type = oldItem.type;
-            return itemRepository.save(new Item(id, item.name, item.sellIn, item.quality, item.type));
-        }catch (ResourceNotFoundException e){
-            throw e;
+            itemRepository.save(new Item(id, item.name, item.sellIn, item.quality, item.type));
+            return item;
+        } catch (ResourceNotFoundException exception) {
+            throw exception;
         }
     }
 
-    public List<Item> listItems(){
+    public List<Item> listItems() {
         return itemRepository.findAll();
     }
 
     public Item findById(int id) {
         return itemRepository.findById(id).orElseThrow(
-                ()-> new ResourceNotFoundException(""));
+                () -> new ResourceNotFoundException(""));
+    }
+
+    public List<Item> createItems(List<Item> items) {
+        HashSet<Integer> idList = new HashSet<>();
+        for (Item item : items) {
+            if (idList.contains(item.getId())) throw new ResourceNotFoundException("There are two items with the same ID");
+            idList.add(item.getId());
+        }
+        return itemRepository.saveAll(items);
     }
 }

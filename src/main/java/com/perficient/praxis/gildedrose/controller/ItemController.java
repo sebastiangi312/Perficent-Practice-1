@@ -1,6 +1,7 @@
 package com.perficient.praxis.gildedrose.controller;
 
 import com.perficient.praxis.gildedrose.business.ItemService;
+import com.perficient.praxis.gildedrose.error.ResourceNotFoundException;
 import com.perficient.praxis.gildedrose.model.Item;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "api/items")
@@ -50,9 +53,14 @@ public class ItemController {
     }
 
     @PostMapping("/quality")
-    public ResponseEntity<List<Item>> updateItemsQuality(){
+    public ResponseEntity<List<Item>> updateItemsQuality() {
         var items = itemService.updateQuality();
         return new ResponseEntity<>(items, HttpStatus.OK);
     }
 
+    @PostMapping("/create")
+    public ResponseEntity<List<Item>> createItems(@RequestBody List<Item> items){
+        List<Item> createdItems = itemService.createItems(items);
+        return new ResponseEntity<>(createdItems, HttpStatus.OK);
+    }
 }
