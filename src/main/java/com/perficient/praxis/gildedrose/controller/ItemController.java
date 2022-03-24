@@ -2,6 +2,7 @@ package com.perficient.praxis.gildedrose.controller;
 
 import com.perficient.praxis.gildedrose.business.ItemService;
 import com.perficient.praxis.gildedrose.error.ResourceNotFoundException;
+import com.perficient.praxis.gildedrose.model.DTO;
 import com.perficient.praxis.gildedrose.model.Item;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +60,8 @@ public class ItemController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<List<Item>> createItems(@RequestBody List<Item> items){
+    public ResponseEntity<List<Item>> createItems(@RequestBody DTO DTOItems){
+        List<Item> items = DTOItems.getItems();
         List<Item> createdItems = itemService.createItems(items);
         return new ResponseEntity<>(createdItems, HttpStatus.OK);
     }
