@@ -70,6 +70,71 @@ public class ItemServiceTest {
     }
 
     @Test
+    public void testUpdateQualityOfAgedTypeItem(){
+
+        var item = new Item(0, "Oreo", 10, 30, Item.Type.AGED);
+        when(itemRepository.findAll()).thenReturn(List.of(item));
+
+        List<Item> itemsUpdated = itemService.updateQuality();
+
+        assertEquals(0, itemsUpdated.get(0).getId());
+        assertEquals("Oreo", itemsUpdated.get(0).name);
+        assertEquals(9, itemsUpdated.get(0).sellIn);
+        assertEquals(31, itemsUpdated.get(0).quality);
+        assertEquals(Item.Type.AGED, itemsUpdated.get(0).type);
+        verify(itemRepository,times(1)).save(any());
+    }
+
+    @Test
+    public void testUpdateQualityOfTicketsTypeItemWhenSellInIsFive(){
+
+        var item = new Item(0, "Oreo", 6, 30, Item.Type.TICKETS);
+        when(itemRepository.findAll()).thenReturn(List.of(item));
+
+        List<Item> itemsUpdated = itemService.updateQuality();
+
+        assertEquals(0, itemsUpdated.get(0).getId());
+        assertEquals("Oreo", itemsUpdated.get(0).name);
+        assertEquals(5, itemsUpdated.get(0).sellIn);
+        assertEquals(33, itemsUpdated.get(0).quality);
+        assertEquals(Item.Type.TICKETS, itemsUpdated.get(0).type);
+        verify(itemRepository,times(1)).save(any());
+    }
+
+    @Test
+    public void testUpdateQualityOfTicketsTypeItemWhenSellInIsZero(){
+
+        var item = new Item(0, "Oreo", 0, 30, Item.Type.TICKETS);
+        when(itemRepository.findAll()).thenReturn(List.of(item));
+
+        List<Item> itemsUpdated = itemService.updateQuality();
+
+        assertEquals(0, itemsUpdated.get(0).getId());
+        assertEquals("Oreo", itemsUpdated.get(0).name);
+        assertEquals(-1, itemsUpdated.get(0).sellIn);
+        assertEquals(0, itemsUpdated.get(0).quality);
+        assertEquals(Item.Type.TICKETS, itemsUpdated.get(0).type);
+        verify(itemRepository,times(1)).save(any());
+    }
+
+    @Test
+    public void testUpdateQualityOfLegendaryTypeItem(){
+
+        var item = new Item(0, "Oreo", 10, 30, Item.Type.LEGENDARY);
+        when(itemRepository.findAll()).thenReturn(List.of(item));
+
+        List<Item> itemsUpdated = itemService.updateQuality();
+
+        assertEquals(0, itemsUpdated.get(0).getId());
+        assertEquals("Oreo", itemsUpdated.get(0).name);
+        assertEquals(10, itemsUpdated.get(0).sellIn);
+        assertEquals(30, itemsUpdated.get(0).quality);
+        assertEquals(Item.Type.LEGENDARY, itemsUpdated.get(0).type);
+        verify(itemRepository,times(1)).save(any());
+    }
+
+
+    @Test
     public void testCreateItemSuccess(){
 
         var item = new Item(12,"Wine",15,20, Item.Type.AGED);

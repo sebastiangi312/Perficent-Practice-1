@@ -44,6 +44,7 @@ public class ItemService {
                     item.sellIn--;
                 break;
                 case TICKETS:
+                    item.sellIn--;
                     if(item.sellIn <= 0)
                         item.quality=0;
                     else if(item.sellIn < 6)
@@ -92,7 +93,7 @@ public class ItemService {
     public List<Item> createItems(List<Item> items) {
         HashSet<Integer> idList = new HashSet<>();
         for (Item item : items) {
-            if (idList.contains(item.getId()) && (itemRepository.findById(item.getId())==null))
+            if (idList.contains(item.getId()) || (itemRepository.findById(item.getId())==null))
                 throw new ResourceNotFoundException("There are two items with the same ID") ;
             idList.add(item.getId());
         }
