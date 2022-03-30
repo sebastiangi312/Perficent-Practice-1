@@ -22,45 +22,6 @@ public class ItemService {
         this.items = items;
     }
 
-    public List<Item> updateQuality() {
-        var itemsList = itemRepository.findAll();
-        var items = itemsList.toArray(new Item[itemsList.size()]);
-
-        for (int i = 0; i < items.length; i++) {
-            var item = items[i];
-            switch (item.type){
-                case AGED:
-                    if(item.quality < 50)
-                        item.quality++;
-                    if(item.sellIn < 0 && item.quality < 50)
-                        item.quality++;
-                    item.sellIn--;
-                break;
-                case NORMAL:
-                    if(item.quality > 0)
-                        item.quality--;
-                    if(item.sellIn < 0 && item.quality > 0)
-                        item.quality--;
-                    item.sellIn--;
-                break;
-                case TICKETS:
-                    item.sellIn--;
-                    if(item.sellIn <= 0)
-                        item.quality=0;
-                    else if(item.sellIn < 6)
-                        item.quality+=3;
-                    else if(item.sellIn < 11)
-                        item.quality+=2;
-                    else
-                        item.quality++;
-                break;
-                case LEGENDARY:
-                    break;
-            }
-            itemRepository.save(items[i]);
-        }
-        return Arrays.asList(items);
-    }
 
 
     public Item createItem(Item item) {

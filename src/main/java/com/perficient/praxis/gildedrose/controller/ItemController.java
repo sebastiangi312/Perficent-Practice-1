@@ -1,6 +1,7 @@
 package com.perficient.praxis.gildedrose.controller;
 
 import com.perficient.praxis.gildedrose.business.ItemService;
+import com.perficient.praxis.gildedrose.business.QualityService;
 import com.perficient.praxis.gildedrose.error.ResourceNotFoundException;
 import com.perficient.praxis.gildedrose.model.DTO;
 import com.perficient.praxis.gildedrose.model.Item;
@@ -23,9 +24,11 @@ import java.util.stream.Collectors;
 public class ItemController {
 
     private final ItemService itemService;
+    private final QualityService qualityService;
 
-    public ItemController(ItemService itemService) {
+    public ItemController(ItemService itemService, QualityService qualityService) {
         this.itemService = itemService;
+        this.qualityService = qualityService;
     }
 
     @GetMapping()
@@ -55,7 +58,7 @@ public class ItemController {
 
     @PostMapping("/quality")
     public ResponseEntity<List<Item>> updateItemsQuality() {
-        var items = itemService.updateQuality();
+        var items = qualityService.updateQuality();
         return new ResponseEntity<>(items, HttpStatus.OK);
     }
 
