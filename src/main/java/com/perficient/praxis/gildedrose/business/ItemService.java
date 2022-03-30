@@ -1,5 +1,6 @@
 package com.perficient.praxis.gildedrose.business;
 
+import com.perficient.praxis.gildedrose.error.DuplicateItemException;
 import com.perficient.praxis.gildedrose.error.ResourceNotFoundException;
 import com.perficient.praxis.gildedrose.model.Item;
 import com.perficient.praxis.gildedrose.repository.ItemRepository;
@@ -52,11 +53,11 @@ public class ItemService {
     }
 
     public List<Item> createItems(List<Item> items) {
-        HashSet<Integer> idList = new HashSet<>();
-        for (Item item : items) {
-            if (idList.contains(item.getId()) || (itemRepository.findById(item.getId())==null))
-                throw new ResourceNotFoundException("There are two items with the same ID") ;
-            idList.add(item.getId());
+        List<Item> itemsInRepository = itemRepository.findAll();
+        for(Item item : items){
+          if(itemsInRepository.contains(item))
+              throw new DuplicateItemException("");
+          itemsInRepository.add(item);
         }
         return itemRepository.saveAll(items);
     }

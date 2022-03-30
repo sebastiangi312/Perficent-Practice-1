@@ -1,5 +1,6 @@
 package com.perficient.praxis.gildedrose.business;
 
+import com.perficient.praxis.gildedrose.error.DuplicateItemException;
 import com.perficient.praxis.gildedrose.error.ResourceNotFoundException;
 import com.perficient.praxis.gildedrose.model.Item;
 import com.perficient.praxis.gildedrose.repository.ItemRepository;
@@ -134,9 +135,9 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void testCreatingItemsWhithSameID(){
+    public void testCreatingItemsWithSameID(){
         var item = new Item(12,"The Batman",15,20, Item.Type.TICKETS);
-        var item2 = new Item(12,"Chocorramo",20,50, Item.Type.NORMAL);
+        var item2 = new Item(15,"The Batman",15,20, Item.Type.TICKETS);
 
         List<Item> items = new LinkedList<>();
         items.add(item);
@@ -144,7 +145,7 @@ public class ItemServiceTest {
 
         when(itemRepository.saveAll(any())).thenReturn(items);
 
-        assertThrows(ResourceNotFoundException.class, () ->
+        assertThrows(DuplicateItemException.class, () ->
                 itemService.createItems(items));
     }
 

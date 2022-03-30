@@ -29,7 +29,7 @@ public class QualityServiceTest {
      * THEN the service should update the quality and sellIn values,
      * both will be decreased by 1
      */
-    public void testUpdateQualityOfNormalTypeItem(){
+    public void testUpdateQualityOfNormalTypeItemWhenSellInIs10(){
 
         var item = new Item(0, "Oreo", 10, 30, Item.Type.NORMAL);
         when(itemRepository.findAll()).thenReturn(List.of(item));
@@ -44,8 +44,40 @@ public class QualityServiceTest {
         verify(itemRepository,times(1)).save(any());
     }
 
+@Test
+    public void testUpdateQualityOfNormalTypeItemWhenSellInIsZeroAndQualityIsZero(){
+
+        var item = new Item(0, "Oreo", 0, 0, Item.Type.NORMAL);
+        when(itemRepository.findAll()).thenReturn(List.of(item));
+
+        List<Item> itemsUpdated = qualityService.updateQuality();
+
+        assertEquals(0, itemsUpdated.get(0).getId());
+        assertEquals("Oreo", itemsUpdated.get(0).name);
+        assertEquals(-1, itemsUpdated.get(0).sellIn);
+        assertEquals(0, itemsUpdated.get(0).quality);
+        assertEquals(Item.Type.NORMAL, itemsUpdated.get(0).type);
+        verify(itemRepository,times(1)).save(any());
+    }
+
     @Test
-    public void testUpdateQualityOfAgedTypeItem(){
+    public void testUpdateQualityOfNormalTypeItemWhenSellLessThanZero(){
+
+        var item = new Item(0, "Oreo", -1, 30, Item.Type.NORMAL);
+        when(itemRepository.findAll()).thenReturn(List.of(item));
+
+        List<Item> itemsUpdated = qualityService.updateQuality();
+
+        assertEquals(0, itemsUpdated.get(0).getId());
+        assertEquals("Oreo", itemsUpdated.get(0).name);
+        assertEquals(-2, itemsUpdated.get(0).sellIn);
+        assertEquals(28, itemsUpdated.get(0).quality);
+        assertEquals(Item.Type.NORMAL, itemsUpdated.get(0).type);
+        verify(itemRepository,times(1)).save(any());
+    }
+
+    @Test
+    public void testUpdateQualityOfAgedTypeItemWhenSellInIs10(){
 
         var item = new Item(0, "Oreo", 10, 30, Item.Type.AGED);
         when(itemRepository.findAll()).thenReturn(List.of(item));
@@ -59,6 +91,55 @@ public class QualityServiceTest {
         assertEquals(Item.Type.AGED, itemsUpdated.get(0).type);
         verify(itemRepository,times(1)).save(any());
     }
+
+    @Test
+    public void testUpdateQualityOfAgedTypeItemWhenSellInLessThanZero(){
+
+        var item = new Item(0, "Oreo", -1, 30, Item.Type.AGED);
+        when(itemRepository.findAll()).thenReturn(List.of(item));
+
+        List<Item> itemsUpdated = qualityService.updateQuality();
+
+        assertEquals(0, itemsUpdated.get(0).getId());
+        assertEquals("Oreo", itemsUpdated.get(0).name);
+        assertEquals(-2, itemsUpdated.get(0).sellIn);
+        assertEquals(32, itemsUpdated.get(0).quality);
+        assertEquals(Item.Type.AGED, itemsUpdated.get(0).type);
+        verify(itemRepository,times(1)).save(any());
+    }
+
+    @Test
+    public void testUpdateQualityOfTicketsTypeItemWhenSellInIsTwelve(){
+
+        var item = new Item(0, "Oreo", 12, 30, Item.Type.TICKETS);
+        when(itemRepository.findAll()).thenReturn(List.of(item));
+
+        List<Item> itemsUpdated = qualityService.updateQuality();
+
+        assertEquals(0, itemsUpdated.get(0).getId());
+        assertEquals("Oreo", itemsUpdated.get(0).name);
+        assertEquals(11, itemsUpdated.get(0).sellIn);
+        assertEquals(31, itemsUpdated.get(0).quality);
+        assertEquals(Item.Type.TICKETS, itemsUpdated.get(0).type);
+        verify(itemRepository,times(1)).save(any());
+    }
+
+    @Test
+    public void testUpdateQualityOfTicketsTypeItemWhenSellInIsSeven(){
+
+        var item = new Item(0, "Oreo", 7, 30, Item.Type.TICKETS);
+        when(itemRepository.findAll()).thenReturn(List.of(item));
+
+        List<Item> itemsUpdated = qualityService.updateQuality();
+
+        assertEquals(0, itemsUpdated.get(0).getId());
+        assertEquals("Oreo", itemsUpdated.get(0).name);
+        assertEquals(6, itemsUpdated.get(0).sellIn);
+        assertEquals(32, itemsUpdated.get(0).quality);
+        assertEquals(Item.Type.TICKETS, itemsUpdated.get(0).type);
+        verify(itemRepository,times(1)).save(any());
+    }
+
 
     @Test
     public void testUpdateQualityOfTicketsTypeItemWhenSellInIsFive(){
