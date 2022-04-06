@@ -94,7 +94,7 @@ Vagrant.configure("2") do |config|
     git clone https://github.com/sebastiangi312/Perficent-Practice-1
     echo "Cloned Project"
     echo "Running Project"
-    cd Perficent-Practice-1
+    cd /home/vagrant/Perficent-Practice-1
     mvn spring-boot:run
   SHELL
 end
