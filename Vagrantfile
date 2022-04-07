@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
   # accessing "localhost:8080" will access port 80 on the guest machine.
   # NOTE: This will enable public access to the opened port
   # config.vm.network "forwarded_port", guest: 80, host: 8080
-  config.vm.network :forwarded_port, guest: 8080, host: 8090
+  config.vm.network :forwarded_port, guest: 8080, host: 8080
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine and only allow access
@@ -65,17 +65,19 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", inline: <<-SHELL
+  config.vm.provision "shell", :run=>'always', inline: <<-SHELL
     sudo apt-get update
-    echo "Installing Java JDK-17..."
+    echo "Initializing Java JDK-17..."
     mkdir -p /usr/share/man/man1
     sudo apt-get -y install openjdk-17-jdk
-    echo "Installed Java JDK-17"
-    echo "Installing Maven"
-    wget https://dlcdn.apache.org/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz
-    tar -xvf apache-maven-3.8.5-bin.tar.gz
-    sudo mv apache-maven-3.8.5 /usr/lib/
-    echo "Installed Java Maven 3.8"
+    echo "Initialized Java JDK-17"
+    echo "Initializing Maven"
+    if [ ! -d "/usr/lib/apache-maven-3.8.5" ]; then
+      wget https://dlcdn.apache.org/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.tar.gz
+      tar -xvf apache-maven-3.8.5-bin.tar.gz
+      sudo mv apache-maven-3.8.5 /usr/lib/
+    fi
+    echo "Initialized Java Maven 3.8"
     echo "Setting up environment..."
     export JAVA_HOME=/usr/lib/jvm/java-1.17.0-openjdk-amd64
     export PATHADD=$JAVA_HOME/bin
@@ -84,14 +86,20 @@ Vagrant.configure("2") do |config|
     export MAVEN_HOME=/usr/lib/apache-maven-3.8.5
     export PATH=${M2_HOME}/bin:${PATH}
     echo "Setted environment..."
-    echo "Installing Docker"
+    echo "Initializing Docker"
     sudo apt-get install -y docker.io
-    echo "Installed Docker"
+    echo "Initialized Docker"
     echo "Deploying Postgres container"
-    sudo docker run --name my-postgres -e POSTGRES_PASSWORD=secret -p 5433:5432 -d postgres
+    if [ $( docker ps -a | grep my-postgres | wc -l ) -gt 0 ]; then
+      sudo docker start my-postgres
+    else
+      sudo docker run --name my-postgres -e POSTGRES_PASSWORD=secret -p 5433:5432 -d postgres
+    fi
     echo "Deployed Postgres container"
     echo "Cloning Project"
-    git clone https://github.com/sebastiangi312/Perficent-Practice-1
+    if [ ! -d "/home/vagrant/Perficent-Practice-1" ]; then
+      git clone https://github.com/sebastiangi312/Perficent-Practice-1
+    fi
     echo "Cloned Project"
     echo "Running Project"
     cd /home/vagrant/Perficent-Practice-1
