@@ -149,4 +149,26 @@ public class ItemServiceTest {
                 itemService.createItems(items));
     }
 
+    @Test
+    public void testDeletingItemSuccess(){
+
+        var item = new Item(12,"The Batman",15,20, Item.Type.TICKETS);
+        when(itemRepository.findById(anyInt())).thenReturn(Optional.of(item));
+
+        Item itemDeleted = itemService.deleteItem(item.getId());
+
+        assertEquals(itemDeleted.getId(), item.getId());
+        assertEquals(itemDeleted.name, item.name);
+        assertEquals(itemDeleted.sellIn, item.sellIn);
+        assertEquals(itemDeleted.quality, item.quality);
+        assertEquals(itemDeleted.type, item.type);
+    }
+
+    @Test
+    public void testDeletingItemWhenTheItemWasNotFound(){
+        var item = new Item(12,"The Batman",15,20, Item.Type.TICKETS);
+
+        assertThrows(ResourceNotFoundException.class, () ->
+                itemService.deleteItem(item.getId()));
+    }
 }

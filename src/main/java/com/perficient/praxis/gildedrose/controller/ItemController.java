@@ -5,13 +5,7 @@ import com.perficient.praxis.gildedrose.business.QualityService;
 import com.perficient.praxis.gildedrose.model.Item;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -62,5 +56,11 @@ public class ItemController {
     public ResponseEntity<List<Item>> createItems(@RequestBody List<Item> items){
         List<Item> createdItems = itemService.createItems(items);
         return new ResponseEntity<>(createdItems, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Item> deleteItem(@PathVariable int id){
+        Item itemDeleted = itemService.deleteItem(id);
+        return new ResponseEntity<>(itemDeleted, HttpStatus.OK);
     }
 }

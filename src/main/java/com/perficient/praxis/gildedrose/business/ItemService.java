@@ -61,4 +61,11 @@ public class ItemService {
         }
         return itemRepository.saveAll(items);
     }
+
+    public Item deleteItem(int itemID) {
+        Item itemToEliminate = itemRepository.findById(itemID)
+                                             .orElseThrow(() -> new ResourceNotFoundException("Item no Founded"));
+        itemRepository.deleteById(itemID);
+        return itemToEliminate;
+    }
 }
