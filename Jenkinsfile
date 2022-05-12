@@ -1,6 +1,5 @@
 pipeline {
-    agent{
-    }
+    agent any
     tools{
         dockerTool  'mydocker'
         maven 'mvn3.8.5'
