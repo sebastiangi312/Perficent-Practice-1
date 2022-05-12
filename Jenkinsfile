@@ -4,6 +4,9 @@ pipeline {
         stage('build') {
             steps {
                 checkout scm
+                mvnHome = tool name: 'maven-3', type: 'maven'
+                mvnCMD = "${mvnHome}/bin/mvn"
+                sh "${mvnCMD} clean package"
             }
         }
         stage('test') {
