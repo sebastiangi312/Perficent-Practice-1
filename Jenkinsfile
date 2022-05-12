@@ -1,11 +1,9 @@
 pipeline {
     agent{
-        docker {
-            image 'maven:3.8.5-openjdk-18-slim'
-        }
     }
     tools{
         dockerTool  'mydocker'
+        maven 'mvn3.8.5'
     }
     stages {
         
@@ -18,7 +16,7 @@ pipeline {
         
         stage('Running Postgres and testing Code'){
             steps {
-                sh 'docker run --name my-postgres --network="my-network" -e POSTGRES_PASSWORD=secret -p 5432:5432 -d postgres'
+                sh 'docker run --name my-postgres -e POSTGRES_PASSWORD=secret -p 5432:5432 -d postgres'
                 sh 'mvn spring-boot:run'
             }
         }
