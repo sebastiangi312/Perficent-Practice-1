@@ -15,7 +15,7 @@ pipeline {
         
         stage('Running Postgres and testing Code'){
             steps {
-                sh 'docker rm postgres'
+                sh 'docker rm my-postgres'
                 sh 'docker run --name my-postgres -e POSTGRES_PASSWORD=secret -p 5432:5432 -d postgres'
                 sh 'mvn spring-boot:run'
             }
