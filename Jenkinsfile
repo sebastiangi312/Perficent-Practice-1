@@ -20,8 +20,10 @@ pipeline {
             }
         }
         stage('Building image and pushing'){
+            steps {
                 //sh 'docker build -t my_back .'
                 //sh 'docker run --name backend --network="my-network" --ip 122.23.0.3 -p 8081:8081 -d my_back'
+            }
         }
     }
 }
