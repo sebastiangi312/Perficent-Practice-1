@@ -1,8 +1,11 @@
 pipeline {
-    agent any
+    agent{
+        docker {
+            image 'maven:3.8.5-openjdk-18-slim'
+        }
+    }
     tools{
         dockerTool  'mydocker'
-        maven 'mvn3.8.5'
     }
     stages {
         
@@ -16,7 +19,6 @@ pipeline {
         stage('Running Postgres and testing Code'){
             steps {
                 //sh 'docker run --name my-postgres --network="my-network" --ip 122.23.0.2 -e POSTGRES_PASSWORD=secret -p 5432:5432 -d postgres'
-                sh 'apt-get -y install openjdk-17-jdk'
                 sh 'mvn spring-boot:run'
             }
         }
