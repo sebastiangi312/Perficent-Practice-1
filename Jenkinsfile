@@ -1,14 +1,11 @@
 pipeline {
-    agent any
-    tools { 
-        maven 'mvn3.8.5' 
+    agent {
+        docker { image 'maven:3.8.5-openjdk-18-slim' }
     }
     stages {
         stage('build') {
             steps {
                 checkout scm
-                echo "PATH = ${PATH}"
-                echo "M2_HOME = ${M2_HOME}"
             }
         }
         stage('test') {
