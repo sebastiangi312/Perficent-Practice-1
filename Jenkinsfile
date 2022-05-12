@@ -1,17 +1,20 @@
 pipeline {
     agent any
+    tools { 
+        maven 'Maven 3.3.9' 
+        jdk 'jdk8' 
+    }
     stages {
         stage('build') {
             steps {
                 checkout scm
-                mvnHome = tool name: 'maven-3', type: 'maven'
-                mvnCMD = "${mvnHome}/bin/mvn"
-                sh "${mvnCMD} clean package"
+                echo "PATH = ${PATH}"
+                echo "M2_HOME = ${M2_HOME}"
             }
         }
         stage('test') {
             steps {
-                sh 'mvn spring-boot:run'
+                sh 'mvn install'
             }
         }
     }
