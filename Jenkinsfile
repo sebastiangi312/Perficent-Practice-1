@@ -3,8 +3,12 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh 'docker network create --subnet=122.23.0.0/16 my-network '
+                sh 'git clone https://github.com/sebastiangi312/Perficent-Practice-1'
             }
+        }
+        stage('test') {
+            sh 'cd Perficent-Practice-1'
+            sh 'mvn spring-boot:run'
         }
     }
 }
