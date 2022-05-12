@@ -2,13 +2,13 @@ pipeline {
     agent{
 
         docker {
-            image '3.8.5-openjdk-18-slim'
+            image 'maven:3.8.5-openjdk-18-slim'
         }
     }
     tools{
         dockerTool  'mydocker'
     }
-    
+
     stages {
         
         stage('Creating Subnets and Cloning Repo') {
