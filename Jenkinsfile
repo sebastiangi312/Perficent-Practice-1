@@ -1,34 +1,11 @@
 pipeline {
-     agent any 
+    agent { docker { image 'maven:3.8.5-openjdk-18-slim' } }
     stages {
-        stage('Static Analysis') {
+        stage('build') {
             steps {
-                echo 'Run the static analysis to the code' 
-            }
-        }
-        stage('Compile') {
-            steps {
-                echo 'Compile the source code' 
-            }
-        }
-        stage('Security Check') {
-            steps {
-                echo 'Run the security check against the application' 
-            }
-        }
-        stage('Run Unit Tests') {
-            steps {
-                echo 'Run unit tests from the source code' 
-            }
-        }
-        stage('Run Integration Tests') {
-            steps {
-                echo 'Run only crucial integration tests from the source code' 
-            }
-        }
-        stage('Publish Artifacts') {
-            steps {
-                echo 'Save the assemblies generated from the compilation' 
+                sh 'docker network create --subnet=122.23.0.0/16 my-network '
+                sh 'docker run --name my-postgres --network="my-network" --ip 122.23.0.2 -e POSTGRES_PASSWORD=secret -p 5432:5432 -d postgres'
+                sh 'git clone https://github.com/sebastiangi312/Perficent-Practice-1'
             }
         }
     }
