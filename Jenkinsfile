@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh 'git clone https://github.com/sebastiangi312/Perficent-Practice-1'
+                checkout scm
             }
         }
         stage('test') {
