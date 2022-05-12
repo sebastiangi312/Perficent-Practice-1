@@ -7,6 +7,7 @@ pipeline {
         stage('build') {
             steps {
                 checkout scm
+                sh 'docker exec -it jenkins /bin/bash'
                 sh 'docker network create --subnet=122.23.0.0/16 my-network '
             }
         }
