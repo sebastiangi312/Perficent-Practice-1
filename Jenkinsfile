@@ -7,8 +7,10 @@ pipeline {
             }
         }
         stage('test') {
-            sh 'cd Perficent-Practice-1'
-            sh 'mvn spring-boot:run'
+            steps {
+                sh 'cd Perficent-Practice-1'
+                sh 'mvn spring-boot:run'
+            }
         }
     }
 }
