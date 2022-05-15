@@ -8,7 +8,12 @@ pipeline {
         stage('Creating Subnets and Cloning Repo') {
             steps {
                 checkout scm
-                sh 'docker network create --subnet=122.23.0.0/16 my-network '
+                sh(returnStdout: true, script: '''#!/bin/bash
+                    if [[ "$(docker network ls | grep my-network )" == "" ]] ; then
+                        docker network create --subnet=122.23.0.0/16 my-network 
+                    fi
+                    '''.stripIndent()
+                )
             }
         }
         
