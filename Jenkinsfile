@@ -2,26 +2,29 @@ pipeline {
     agent any
     tools{
         dockerTool  'mydocker'
-        maven 'mvn3.8.5'
     }
     stages {
         
         stage('Creating Subnets and Cloning Repo') {
             steps {
                 checkout scm
-                //sh 'docker network create --subnet=122.23.0.0/16 my-network '
+                sh 'docker network create --subnet=122.23.0.0/16 my-network '
             }
         }
         
-        stage('Running Postgres and testing Code'){
+        stage('Building Image') {
             steps {
-                sh 'docker stop my-postgres'
-                sh 'docker rm my-postgres'
-                sh 'docker run --name my-postgres -e POSTGRES_PASSWORD=secret -p 5432:5432 -d postgres'
-                sh 'mvn spring-boot:run'
+                sh 'docker build -t "my_back" --target build .'
             }
         }
-        stage('Building image and pushing'){
+
+        stage('Running Postgres and testing Code'){
+            steps {
+                sh 'docker run --name my-postgres -e POSTGRES_PASSWORD=secret -p 5432:5432 -d postgres'
+                sh 'docker run -it --rm --network="my-network" --ip 122.23.0.3 -p 8081:8081 -e DB_URL=122.23.0.2:5432 --name  springboot-test "my_back" mvn test'
+            }
+        }
+        stage('Pushing'){
             steps {
                 sh 'docker -v'
                 //sh 'docker build -t my_back .'
