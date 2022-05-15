@@ -47,7 +47,7 @@ pipeline {
         
         stage('Building Image') {
             steps {
-                sh 'docker build -t "my_back" --target build .'
+                sh 'docker build -t segiraldovi/my_back:latest --target build .'
             }
         }
 
@@ -60,7 +60,7 @@ pipeline {
         stage('Pushing'){
             steps {
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                sh 'docker push darinpope/dp-alpine:latest'
+                sh 'docker push segiraldovi/my_back:latest'
             }
         }
     }
