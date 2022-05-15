@@ -3,11 +3,13 @@ pipeline {
     tools{
         dockerTool  'mydocker'
     }
+    enviroment {
+        DOCKERHUB_CREDENTIALS = credentials('segiraldovi-Dockerhub')
+    }
     stages {
         
         stage('Cleaning previous Test') {
             steps {
-                checkout scm
                 sh(returnStdout: true, script: '''#!/bin/bash
                     if [[ "$(docker container ls | grep backend )" != "" ]] ; then
                         docker stop backend
@@ -57,10 +59,14 @@ pipeline {
         }
         stage('Pushing'){
             steps {
-                sh 'docker -v'
-                //sh 'docker build -t my_back .'
-                //sh 'docker run --name backend --network="my-network" --ip 122.23.0.3 -p 8081:8081 -d my_back'
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'docker push darinpope/dp-alpine:latest'
             }
+        }
+    }
+    post {
+        always {
+        sh 'docker logout'
         }
     }
 }
