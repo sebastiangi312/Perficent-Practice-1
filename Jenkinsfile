@@ -47,7 +47,7 @@ pipeline {
         
         stage('Building Image') {
             steps {
-                sh 'docker build -t segiraldovi/my_back:latest --target build .'
+                sh 'docker build -t my_back --target build .'
             }
         }
 
