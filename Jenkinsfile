@@ -3,7 +3,7 @@ pipeline {
     tools{
         dockerTool  'mydocker'
     }
-    enviroment {
+    environment  {
         DOCKERHUB_CREDENTIALS = credentials('segiraldovi-Dockerhub')
     }
     stages {
