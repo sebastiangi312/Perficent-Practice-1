@@ -17,12 +17,7 @@ pipeline {
                     fi
                     '''.stripIndent()
                 )
-                sh(returnStdout: true, script: '''#!/bin/bash
-                    if [[ "$(docker images | grep my_back )" != "" ]] ; then
-                        docker rmi my_back
-                    fi
-                    '''.stripIndent()
-                )
+                
                 sh(returnStdout: true, script: '''#!/bin/bash
                     if [[ "$(docker container ls | grep my-postgres )" != "" ]] ; then
                         docker stop my-postgres
