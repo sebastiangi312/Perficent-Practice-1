@@ -21,7 +21,7 @@ pipeline {
         stage('Running Postgres and testing Code'){
             steps {
                 sh 'docker run --name my-postgres -e POSTGRES_PASSWORD=secret -p 5432:5432 -d postgres'
-                sh 'docker run -it --rm --network="my-network" --ip 122.23.0.3 -p 8081:8081 -e DB_URL=122.23.0.2:5432 --name  springboot-test "my_back" mvn test'
+                sh 'docker run --rm --network="my-network" --ip 122.23.0.3 -p 8081:8081 -e DB_URL=122.23.0.2:5432 --name  springboot-test "my_back" mvn test'
             }
         }
         stage('Pushing'){
