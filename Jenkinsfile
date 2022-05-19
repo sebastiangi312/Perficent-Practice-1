@@ -19,6 +19,14 @@ pipeline {
                 )
                 
                 sh(returnStdout: true, script: '''#!/bin/bash
+                    if [[ "$(docker container ls | grep segiraldovi/backend )" != "" ]] ; then
+                        docker stop segiraldovi/backend
+                        docker rm segiraldovi/backend
+                    fi
+                    '''.stripIndent()
+                )
+
+                sh(returnStdout: true, script: '''#!/bin/bash
                     if [[ "$(docker container ls | grep my-postgres )" != "" ]] ; then
                         docker stop my-postgres
                         docker rm my-postgres
@@ -42,14 +50,14 @@ pipeline {
         
         stage('Building Image') {
             steps {
-                sh 'docker build -t my_back --target build .'
+                sh 'docker build -t segiraldovi/backend --target build .'
             }
         }
 
         stage('Running Postgres and testing Code'){
             steps {
                 sh 'docker run --name my-postgres --network="my-network" --ip 122.23.0.2 -e POSTGRES_PASSWORD=secret -p 5432:5432 -d postgres'
-                sh 'docker run --rm --network="my-network" --ip 122.23.0.3 -p 8081:8081 -e DB_URL=122.23.0.2:5432 --name  backend "my_back" mvn test'
+                sh 'docker run --rm --network="my-network" --ip 122.23.0.3 -p 8081:8081 -e DB_URL=122.23.0.2:5432 --name  backend "segiraldovi/backend" mvn test'
             }
         }
         stage('Pushing'){
