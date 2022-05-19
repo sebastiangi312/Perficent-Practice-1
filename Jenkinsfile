@@ -56,9 +56,10 @@ pipeline {
 
         stage('Running Postgres and testing Code'){
             steps {
-                sh 'docker run --rm --network="my-network" --ip 122.23.0.3 -p 8081:8081 -e DB_URL=group5-rds.cqqmj66dxtlw.us-east-1.rds.amazonaws.com -e POSTGRES_PORT=5432 --name  backend "segiraldovi/backend" mvn test'
+                sh 'docker run --rm -p 8081:8081 -e DB_URL=group5-rds.cqqmj66dxtlw.us-east-1.rds.amazonaws.com -e POSTGRES_PORT=5432 --name  backend "segiraldovi/backend" mvn test'
             }
         }
+
         stage('Pushing'){
             steps {
                 sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin '
