@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  api:
+    container_name: backend
+    image: java-docker
+    build: ./
+    ports:
+      - 8081:8081
+    environment:
+      - POSTGRES_PORT=5432
+      - DB_URL=dbpostgresql
+    depends_on:
+      - dbpostgresql
+
+  dbpostgresql:
+    container_name: my-postgres
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=secret
+
+#docker-compose run --name backend -d api ./mvnw test
