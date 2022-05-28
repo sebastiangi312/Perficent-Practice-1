@@ -1,15 +1,12 @@
-FROM maven:3.8.5-openjdk-18-slim as base
+FROM openjdk:18-alpine3.15
 
 WORKDIR /app
 
 COPY .mvn/ .mvn
-COPY pom.xml ./
+COPY mvnw pom.xml ./
+RUN dos2unix mvnw
+RUN ./mvnw dependency:go-offline
+
 COPY src ./src
 
-FROM base as test
-CMD ["mvn", "install"]
-
-
-FROM base as build
-EXPOSE 8081
-CMD ["mvn", "spring-boot:run"]
+CMD ["./mvnw", "spring-boot:run"]

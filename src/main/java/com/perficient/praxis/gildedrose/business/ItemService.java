@@ -55,16 +55,16 @@ public class ItemService {
     public List<Item> createItems(List<Item> items) {
         List<Item> itemsInRepository = itemRepository.findAll();
         for(Item item : items){
-          if(itemsInRepository.contains(item))
-              throw new DuplicateItemException("");
-          itemsInRepository.add(item);
+            if(itemsInRepository.contains(item))
+                throw new DuplicateItemException("");
+            itemsInRepository.add(item);
         }
         return itemRepository.saveAll(items);
     }
 
     public Item deleteItem(int itemID) {
         Item itemToEliminate = itemRepository.findById(itemID)
-                                             .orElseThrow(() -> new ResourceNotFoundException("Item no Founded"));
+                .orElseThrow(() -> new ResourceNotFoundException("Item no Founded"));
         itemRepository.deleteById(itemID);
         return itemToEliminate;
     }
