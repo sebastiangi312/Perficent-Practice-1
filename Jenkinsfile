@@ -12,9 +12,9 @@ pipeline {
             steps {
                 sh 'docker image prune --all --force '
                 sh(returnStdout: true, script: '''#!/bin/bash
-                    if [[ "$(docker container ls | grep segiraldovi/my_back )" != "" ]] ; then
-                        docker stop segiraldovi/my_back
-                        docker rm segiraldovi/my_back
+                    if [[ "$(docker container ls | grep backend )" != "" ]] ; then
+                        docker stop backend
+                        docker rm -f backend
                     fi
                     '''.stripIndent()
                 )
@@ -36,7 +36,7 @@ pipeline {
         
         stage('Building Image') {
             steps {
-                sh 'docker build'
+                sh 'docker build .'
             }
         }
 
