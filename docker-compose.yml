@@ -1,8 +1,8 @@
-version: '3.8'
+
 services:
   api:
     container_name: backend
-    image: java-docker
+    image: segiraldovi/my_back
     build: ./
     ports:
       - 8081:8081
@@ -19,5 +19,3 @@ services:
       - "5432:5432"
     environment:
       - POSTGRES_PASSWORD=secret
-
-#docker-compose run --name backend -d api ./mvnw test
