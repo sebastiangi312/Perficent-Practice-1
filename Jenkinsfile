@@ -40,7 +40,7 @@ pipeline {
             }
         }
 
-        stage('Running Postgres and Data'){
+        stage('Running Tests'){
             steps {
                 sh 'docker-compose run --name backend -d api ./mvnw test'
             }
