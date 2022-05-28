@@ -10,21 +10,7 @@ pipeline {
         
         stage('Cleaning previous Test') {
             steps {
-                sh 'docker image prune --all --force '
-                sh(returnStdout: true, script: '''#!/bin/bash
-                    if [[ "$(docker container ls | grep backend )" != "" ]] ; then
-                        docker stop backend
-                        docker rm -f backend
-                    fi
-                    '''.stripIndent()
-                )
-                sh(returnStdout: true, script: '''#!/bin/bash
-                    if [[ "$(docker ps -a | grep my-postgres )" != "" ]] ; then
-                        docker stop my-postgres
-                        docker rm -f my-postgres
-                    fi
-                    '''.stripIndent()
-                )
+                sh 'docker ps -aq | xargs docker stop | xargs docker rm'
             }
         }
 
