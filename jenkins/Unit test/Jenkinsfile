@@ -22,7 +22,7 @@ pipeline {
         
         stage('Building Image') {
             steps {
-                sh 'cd jenkins\Unit test'
+                sh 'cd jenkins/Unit test'
                 sh 'docker-compose build'
             }
         }
