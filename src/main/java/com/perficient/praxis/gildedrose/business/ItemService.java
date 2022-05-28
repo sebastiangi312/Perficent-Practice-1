@@ -2,26 +2,28 @@ package com.perficient.praxis.gildedrose.business;
 
 import com.perficient.praxis.gildedrose.error.DuplicateItemException;
 import com.perficient.praxis.gildedrose.error.ResourceNotFoundException;
-import com.perficient.praxis.gildedrose.factory.ItemFactory;
 import com.perficient.praxis.gildedrose.model.Item;
 import com.perficient.praxis.gildedrose.repository.ItemRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemService {
 
     private final ItemRepository itemRepository;
-    private final ItemFactory itemFactory;
 
     Item[] items;
 
-    public ItemService(ItemRepository itemRepository, ItemFactory itemFactory, Item[] items) {
+    public ItemService(ItemRepository itemRepository, Item[] items) {
         this.itemRepository = itemRepository;
-        this.itemFactory = itemFactory;
         this.items = items;
     }
+
+
 
     public Item createItem(Item item) {
         return itemRepository.save(item);
@@ -34,7 +36,7 @@ public class ItemService {
                 item.name = oldItem.name;
             if (item.type == null)
                 item.type = oldItem.type;
-            itemRepository.save(itemFactory.createItem(id, item.name, item.sellIn, item.quality, item.type));
+            itemRepository.save(new Item(id, item.name, item.sellIn, item.quality, item.type));
             return item;
         } catch (ResourceNotFoundException exception) {
             throw exception;
@@ -53,16 +55,16 @@ public class ItemService {
     public List<Item> createItems(List<Item> items) {
         List<Item> itemsInRepository = itemRepository.findAll();
         for(Item item : items){
-          if(itemsInRepository.contains(item))
-              throw new DuplicateItemException("");
-          itemsInRepository.add(item);
+            if(itemsInRepository.contains(item))
+                throw new DuplicateItemException("");
+            itemsInRepository.add(item);
         }
         return itemRepository.saveAll(items);
     }
 
     public Item deleteItem(int itemID) {
         Item itemToEliminate = itemRepository.findById(itemID)
-                                             .orElseThrow(() -> new ResourceNotFoundException("Item not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Item no Founded"));
         itemRepository.deleteById(itemID);
         return itemToEliminate;
     }

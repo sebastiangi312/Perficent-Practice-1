@@ -1,7 +1,5 @@
 package com.perficient.praxis.gildedrose.model;
 
-import com.perficient.praxis.gildedrose.factory.ItemFactory.Type;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Id;
@@ -12,15 +10,18 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "items")
-public abstract class Item {
+public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     public String name;
+
     public int sellIn;
+
     public int quality;
+
     public Type type;
 
     public Item() {
@@ -42,8 +43,12 @@ public abstract class Item {
         this.id = id;
     }
 
-    public abstract void updateQuality();
-
+    public enum Type {
+        AGED,
+        NORMAL,
+        LEGENDARY,
+        TICKETS
+    }
 
     @Override
     public String toString() {
@@ -62,5 +67,4 @@ public abstract class Item {
     public int hashCode() {
         return Objects.hash(name, sellIn, quality, type);
     }
-
 }
