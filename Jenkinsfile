@@ -30,7 +30,7 @@ pipeline {
 
         stage('Running Tests'){
             steps {
-                sh 'docker-compose run --name backend -d api ./mvnw test'
+                sh 'docker-compose run --name backend api ./mvnw test'
             }
         }
         stage('Pushing'){
