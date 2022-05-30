@@ -11,7 +11,7 @@ pipeline {
         stage('Cleaning previous Test') {
             steps {
                 sh '(docker rm backend_ut -f) | true'
-                sh '(docker rmi segiraldovi/my_back -f) | true'
+                sh '(docker rmi segiraldovi/my_back) | true'
             }
         }
 
