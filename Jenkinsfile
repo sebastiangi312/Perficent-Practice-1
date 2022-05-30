@@ -15,7 +15,7 @@ pipeline {
                   docker container prune -f
                '''
                sh '''
-                  docker image rm -f backend_ut || true
+                  docker image rm -f segiraldovi/my_back || true
                '''
             }
         }
