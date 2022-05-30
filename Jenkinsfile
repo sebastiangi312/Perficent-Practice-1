@@ -10,9 +10,8 @@ pipeline {
         
         stage('Cleaning previous Test') {
             steps {
-                sh '(docker ps -aq | xargs docker stop | xargs docker rm) | true'
-                sh 'docker system prune -af'
-                sh '(docker volume rm $(docker volume ls -q)) | true'
+                sh '(docker rm backend_ut -f) | true'
+                sh '(docker rmi segiraldovi/my_back) | true'
             }
         }
 
@@ -30,7 +29,7 @@ pipeline {
 
         stage('Running Tests'){
             steps {
-                sh 'docker-compose run --name backend api ./mvnw test'
+                sh 'docker-compose run api ./mvnw test'
             }
         }
         stage('Pushing'){
