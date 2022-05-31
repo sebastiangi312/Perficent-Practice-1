@@ -24,6 +24,8 @@ public class ItemStored {
         this.type = type;
     }
 
+    public ItemStored() {
+    }
 
     public int getId() {
         return id;

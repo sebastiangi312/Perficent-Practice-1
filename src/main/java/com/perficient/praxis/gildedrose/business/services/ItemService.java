@@ -4,7 +4,6 @@ import com.perficient.praxis.gildedrose.error.DuplicateItemException;
 import com.perficient.praxis.gildedrose.error.ResourceNotFoundException;
 import com.perficient.praxis.gildedrose.business.model.Item;
 import com.perficient.praxis.gildedrose.handler.RepositoryHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
