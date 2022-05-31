@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class ItemFactory {
 
     private Item createItem(int id, String name, int sellIn, int quality, Type type){
-        if(type == null) return new NormalItem(id, name, sellIn, quality, type);
+        if(type == null) return new NormalItem(id, name, sellIn, quality, Type.NORMAL);
         Item newItem = null;
         switch (type){
             case AGED:
