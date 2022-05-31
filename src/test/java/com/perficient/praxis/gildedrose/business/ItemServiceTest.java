@@ -2,10 +2,12 @@ package com.perficient.praxis.gildedrose.business;
 
 import com.perficient.praxis.gildedrose.error.DuplicateItemException;
 import com.perficient.praxis.gildedrose.error.ResourceNotFoundException;
-import com.perficient.praxis.gildedrose.model.Item;
-import com.perficient.praxis.gildedrose.model.Item.Type;
+import com.perficient.praxis.gildedrose.controller.model.ItemRequest;
+import com.perficient.praxis.gildedrose.handler.ServiceItemHandler;
 import com.perficient.praxis.gildedrose.repository.ItemRepository;
 
+import com.perficient.praxis.gildedrose.repository.model.ItemStored;
+import com.perficient.praxis.gildedrose.type.Type;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +29,7 @@ public class ItemServiceTest {
     private ItemRepository itemRepository;
 
     @Autowired
-    private ItemService itemService;
+    private ServiceItemHandler serviceItemHandler;
 
 
     @Test
@@ -36,17 +38,21 @@ public class ItemServiceTest {
         when(itemRepository.findById(anyInt())).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () ->
-                itemService.findById(0));
+                serviceItemHandler.findById(0));
     }
 
     @Test
     public void testGetItemByIdSuccess(){
 
-        var item = new Item(0, "Oreo", 10, 30, Type.NORMAL);
+        var item = new ItemStored(0, "Oreo", 10, 30, Type.NORMAL);
         when(itemRepository.findById(anyInt())).thenReturn(Optional.of(item));
 
-        Item itemFound = itemService.findById(0);
-        assertEquals(item, itemFound);
+        ItemRequest itemFound = serviceItemHandler.findById(0);
+        assertEquals(0, itemFound.getId());
+        assertEquals("Oreo", itemFound.name);
+        assertEquals(10, itemFound.sellIn);
+        assertEquals(30, itemFound.quality);
+        assertEquals(Type.NORMAL, itemFound.type);
     }
 
 
@@ -55,11 +61,13 @@ public class ItemServiceTest {
     @Test
     public void testCreateItemSuccess(){
 
-        var item = new Item(12,"Wine",15,20, Type.AGED);
-        itemService.createItem(item);
-        when(itemRepository.findAll()).thenReturn(List.of(item));
+        var itemStored = new ItemStored(12,"Wine",15,20, Type.AGED);
+        when(itemRepository.save(any())).thenReturn(itemStored);
+        when(itemRepository.findAll()).thenReturn(List.of(itemStored));
 
-        var itemCreated = itemService.listItems();
+        var item = new ItemRequest(12,"Wine",15,21, Type.AGED);
+        serviceItemHandler.createItem(item);
+        var itemCreated = serviceItemHandler.listItems();
 
         assertEquals(12, itemCreated.get(0).getId());
         assertEquals("Wine", itemCreated.get(0).name);
@@ -72,21 +80,23 @@ public class ItemServiceTest {
     @Test
     public void testUpdateItemWhenItemWasNotFound(){
 
-        var item = new Item(12,"Wine",15,20, Type.AGED);
+        var item = new ItemRequest(12,"Wine",15,20, Type.AGED);
         when(itemRepository.findById(anyInt())).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () ->
-                itemService.updateItem(item.getId(), item));
+                serviceItemHandler.updateItem(item.getId(), item));
     }
 
     @Test
     public void testUpdateItemWhenItemWasSentFull(){
 
-        var oldItem = new Item(12, "Oreo", 10, 30, Type.NORMAL);
-        var item = new Item(12,"Wine",15,20, Type.AGED);
-        when(itemRepository.findById(anyInt())).thenReturn(Optional.of(oldItem));
+        var oldItem = new ItemStored(12,"Wine",15,20, Type.AGED);
+        var item = new ItemRequest(12,"Wine",15,20, Type.AGED);
 
-        Item itemUpdated = itemService.updateItem(12,item);
+        when(itemRepository.findById(anyInt())).thenReturn(Optional.of(oldItem));
+        when(itemRepository.save(oldItem)).thenReturn(oldItem);
+
+        ItemRequest itemUpdated = serviceItemHandler.updateItem(12,item);
 
         assertEquals(12, itemUpdated.getId());
         assertEquals("Wine", itemUpdated.name);
@@ -96,13 +106,14 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void testUpdateItemWhenItemWasSentWithoutNameAndType(){
+    public void testUpdateItemWhenItemWasSentWithoutNameAndNullType(){
 
-        var oldItem = new Item(12, "Oreo", 10, 30, Type.NORMAL);
-        var item = new Item(12,null,15,20, null);
+        var oldItem = new ItemStored(12, "Oreo", 10, 30, Type.NORMAL);
+        var item = new ItemRequest(12,null,15,20, null);
         when(itemRepository.findById(anyInt())).thenReturn(Optional.of(oldItem));
+        when(itemRepository.save(any())).thenReturn(new ItemStored(12, "Oreo", 15, 20, Type.NORMAL));
 
-        Item itemUpdated = itemService.updateItem(12,item);
+        ItemRequest itemUpdated = serviceItemHandler.updateItem(12,item);
 
         assertEquals(12, itemUpdated.getId());
         assertEquals("Oreo", itemUpdated.name);
@@ -113,10 +124,10 @@ public class ItemServiceTest {
 
     @Test
     public void testCreatingItemsWhenIDAreDifferent(){
-        var item = new Item(12,"The Batman",15,20, Type.TICKETS);
-        var item2 = new Item(13,"Chocorramo",20,50, Type.NORMAL);
+        var item = new ItemStored(12,"The Batman",15,20, Type.TICKETS);
+        var item2 = new ItemStored(13,"Chocorramo",20,50, Type.NORMAL);
 
-        List<Item> items = new LinkedList<>();
+        List<ItemStored> items = new LinkedList<>();
         items.add(item);
         items.add(item2);
 
@@ -137,26 +148,23 @@ public class ItemServiceTest {
 
     @Test
     public void testCreatingItemsWithSameID(){
-        var item = new Item(12,"The Batman",15,20, Type.TICKETS);
-        var item2 = new Item(15,"The Batman",15,20, Type.TICKETS);
+        var itemStored = new ItemStored(12,"The Batman",15,20, Type.TICKETS);
 
-        List<Item> items = new LinkedList<>();
-        items.add(item);
-        items.add(item2);
+        when(itemRepository.findAll()).thenReturn(List.of(itemStored));
 
-        when(itemRepository.saveAll(any())).thenReturn(items);
 
+        var item = new ItemRequest(12,"The Batman",15,20, Type.TICKETS);
         assertThrows(DuplicateItemException.class, () ->
-                itemService.createItems(items));
+                serviceItemHandler.createItem(item));
     }
 
     @Test
     public void testDeletingItemSuccess(){
 
-        var item = new Item(12,"The Batman",15,20, Type.TICKETS);
+        var item = new ItemStored(12,"The Batman",15,20, Type.TICKETS);
         when(itemRepository.findById(anyInt())).thenReturn(Optional.of(item));
 
-        Item itemDeleted = itemService.deleteItem(item.getId());
+        ItemRequest itemDeleted = serviceItemHandler.deleteItem(item.getId());
 
         assertEquals(itemDeleted.getId(), item.getId());
         assertEquals(itemDeleted.name, item.name);
@@ -167,9 +175,9 @@ public class ItemServiceTest {
 
     @Test
     public void testDeletingItemWhenTheItemWasNotFound(){
-        var item = new Item(12,"The Batman",15,20, Type.TICKETS);
+        var item = new ItemRequest(12,"The Batman",15,20, Type.TICKETS);
 
         assertThrows(ResourceNotFoundException.class, () ->
-                itemService.deleteItem(item.getId()));
+                serviceItemHandler.deleteItem(item.getId()));
     }
 }

@@ -1,8 +1,8 @@
 package com.perficient.praxis.gildedrose.controller;
 
-import com.perficient.praxis.gildedrose.business.ItemService;
-import com.perficient.praxis.gildedrose.business.QualityService;
-import com.perficient.praxis.gildedrose.model.Item;
+import com.perficient.praxis.gildedrose.controller.model.ItemRequest;
+import com.perficient.praxis.gildedrose.handler.ServiceItemHandler;
+import com.perficient.praxis.gildedrose.handler.QualityServiceHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,54 +13,54 @@ import java.util.List;
 @RequestMapping(value = "api/items")
 public class ItemController {
 
-    private final ItemService itemService;
-    private final QualityService qualityService;
+    private final ServiceItemHandler serviceItemHandler;
+    private final QualityServiceHandler qualityServiceHandler;
 
-    public ItemController(ItemService itemService, QualityService qualityService) {
-        this.itemService = itemService;
-        this.qualityService = qualityService;
+    public ItemController(ServiceItemHandler serviceItemHandler, QualityServiceHandler qualityServiceHandler) {
+        this.serviceItemHandler = serviceItemHandler;
+        this.qualityServiceHandler = qualityServiceHandler;
     }
 
     @GetMapping()
-    public ResponseEntity<List<Item>> listItems(){
-        var items = itemService.listItems();
+    public ResponseEntity<List<ItemRequest>> listItems(){
+        var items = serviceItemHandler.listItems();
         return new ResponseEntity<>(items, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Item> findById(@PathVariable int id){
-        var item = itemService.findById(id);
+    public ResponseEntity<ItemRequest> findById(@PathVariable int id){
+        var item = serviceItemHandler.findById(id);
         return new ResponseEntity<>(item, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Item> createItem(@RequestBody Item item){
-        Item createdItem = itemService.createItem(item);
+    public ResponseEntity<ItemRequest> createItem(@RequestBody ItemRequest item){
+        ItemRequest createdItem = serviceItemHandler.createItem(item);
         return new ResponseEntity<>(createdItem, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Item> updateItem(@PathVariable int id,
-                                           @RequestBody Item item){
-        Item createdItem = itemService.updateItem(id, item);
+    public ResponseEntity<ItemRequest> updateItem(@PathVariable int id,
+                                                  @RequestBody ItemRequest item){
+        ItemRequest createdItem = serviceItemHandler.updateItem(id, item);
         return new ResponseEntity<>(createdItem, HttpStatus.CREATED);
     }
 
     @PostMapping("/quality")
-    public ResponseEntity<List<Item>> updateItemsQuality() {
-        var items = qualityService.updateQuality();
+    public ResponseEntity<List<ItemRequest>> updateItemsQuality() {
+        var items = qualityServiceHandler.updateQuality();
         return new ResponseEntity<>(items, HttpStatus.OK);
     }
 
     @PostMapping("/create")
-    public ResponseEntity<List<Item>> createItems(@RequestBody List<Item> items){
-        List<Item> createdItems = itemService.createItems(items);
+    public ResponseEntity<List<ItemRequest>> createItems(@RequestBody List<ItemRequest> items){
+        List<ItemRequest> createdItems = serviceItemHandler.createItems(items);
         return new ResponseEntity<>(createdItems, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Item> deleteItem(@PathVariable int id){
-        Item itemDeleted = itemService.deleteItem(id);
+    public ResponseEntity<ItemRequest> deleteItem(@PathVariable int id){
+        ItemRequest itemDeleted = serviceItemHandler.deleteItem(id);
         return new ResponseEntity<>(itemDeleted, HttpStatus.OK);
     }
 }
