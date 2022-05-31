@@ -36,6 +36,7 @@ public class QualityServiceTest {
 
         var item = new ItemStored(0, "Oreo", 10, 30, Type.NORMAL);
         when(itemRepository.findAll()).thenReturn(List.of(item));
+        when(itemRepository.save(any())).thenReturn(item);
 
         List<ItemRequest> itemsUpdated = qualityServiceHandler.updateQuality();
 
@@ -51,6 +52,7 @@ public class QualityServiceTest {
 
         var item = new ItemStored(0, "Oreo", 0, 0, Type.NORMAL);
         when(itemRepository.findAll()).thenReturn(List.of(item));
+        when(itemRepository.save(any())).thenReturn(item);
 
         List<ItemRequest> itemsUpdated = qualityServiceHandler.updateQuality();
 
@@ -66,6 +68,7 @@ public class QualityServiceTest {
 
         var item = new ItemStored(0, "Oreo", -1, 30, Type.NORMAL);
         when(itemRepository.findAll()).thenReturn(List.of(item));
+        when(itemRepository.save(any())).thenReturn(item);
 
         List<ItemRequest> itemsUpdated = qualityServiceHandler.updateQuality();
 
@@ -81,6 +84,7 @@ public class QualityServiceTest {
 
         var item = new ItemStored(0, "Oreo", 10, 30, Type.AGED);
         when(itemRepository.findAll()).thenReturn(List.of(item));
+        when(itemRepository.save(any())).thenReturn(item);
 
         List<ItemRequest> itemsUpdated = qualityServiceHandler.updateQuality();
 
@@ -96,6 +100,7 @@ public class QualityServiceTest {
 
         var item = new ItemStored(0, "Oreo", -1, 30, Type.AGED);
         when(itemRepository.findAll()).thenReturn(List.of(item));
+        when(itemRepository.save(any())).thenReturn(item);
 
         List<ItemRequest> itemsUpdated = qualityServiceHandler.updateQuality();
 
@@ -111,6 +116,7 @@ public class QualityServiceTest {
 
         var item = new ItemStored(0, "Oreo", 12, 30, Type.TICKETS);
         when(itemRepository.findAll()).thenReturn(List.of(item));
+        when(itemRepository.save(any())).thenReturn(item);
 
         List<ItemRequest> itemsUpdated = qualityServiceHandler.updateQuality();
 
@@ -126,6 +132,7 @@ public class QualityServiceTest {
 
         var item = new ItemStored(0, "Oreo", 7, 30, Type.TICKETS);
         when(itemRepository.findAll()).thenReturn(List.of(item));
+        when(itemRepository.save(any())).thenReturn(item);
 
         List<ItemRequest> itemsUpdated = qualityServiceHandler.updateQuality();
 
@@ -142,6 +149,7 @@ public class QualityServiceTest {
 
         var item = new ItemStored(0, "Oreo", 6, 30, Type.TICKETS);
         when(itemRepository.findAll()).thenReturn(List.of(item));
+        when(itemRepository.save(any())).thenReturn(item);
 
         List<ItemRequest> itemsUpdated = qualityServiceHandler.updateQuality();
 
@@ -157,6 +165,7 @@ public class QualityServiceTest {
 
         var item = new ItemStored(0, "Oreo", 0, 30, Type.TICKETS);
         when(itemRepository.findAll()).thenReturn(List.of(item));
+        when(itemRepository.save(any())).thenReturn(item);
 
         List<ItemRequest> itemsUpdated = qualityServiceHandler.updateQuality();
 
@@ -172,6 +181,7 @@ public class QualityServiceTest {
 
         var item = new ItemStored(0, "Oreo", 10, 30, Type.LEGENDARY);
         when(itemRepository.findAll()).thenReturn(List.of(item));
+        when(itemRepository.save(any())).thenReturn(item);
 
         List<ItemRequest> itemsUpdated = qualityServiceHandler.updateQuality();
 
