@@ -19,6 +19,7 @@ public class QualityService {
         var items = repositoryHandler.listItems();
         for(Item item : items){
             item.updateQuality();
+            repositoryHandler.updateItem(item);
         }
         return items;
     }
