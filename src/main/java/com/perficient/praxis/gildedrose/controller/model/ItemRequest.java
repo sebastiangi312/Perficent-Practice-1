@@ -1,19 +1,12 @@
-package com.perficient.praxis.gildedrose.model;
+package com.perficient.praxis.gildedrose.controller.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import com.perficient.praxis.gildedrose.type.Type;
+
 import java.util.Objects;
 
 
-@Entity
-@Table(name = "items")
-public class Item {
+public class ItemRequest {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     public String name;
@@ -24,10 +17,10 @@ public class Item {
 
     public Type type;
 
-    public Item() {
+    public ItemRequest() {
     }
 
-    public Item(int id, String name, int sellIn, int quality, Type type) {
+    public ItemRequest(int id, String name, int sellIn, int quality, Type type) {
         this.id = id;
         this.name = name;
         this.sellIn = sellIn;
@@ -43,12 +36,6 @@ public class Item {
         this.id = id;
     }
 
-    public enum Type {
-        AGED,
-        NORMAL,
-        LEGENDARY,
-        TICKETS
-    }
 
     @Override
     public String toString() {
@@ -58,8 +45,8 @@ public class Item {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Item)) return false;
-        Item item = (Item) o;
+        if (!(o instanceof ItemRequest)) return false;
+        ItemRequest item = (ItemRequest) o;
         return sellIn == item.sellIn && quality == item.quality && Objects.equals(name, item.name) && type == item.type;
     }
 
