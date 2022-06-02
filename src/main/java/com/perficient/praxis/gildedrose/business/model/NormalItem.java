@@ -13,6 +13,6 @@ public class NormalItem extends Item{
             quality--;
         if(sellIn < 0 && quality > 0)
             quality--;
-        sellIn--;
+        sellIn-=2;
     }
 }
